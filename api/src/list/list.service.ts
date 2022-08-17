@@ -3,8 +3,10 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User, UserDocument } from 'src/user/user.schema';
 import { UserService } from 'src/user/user.service';
+import { InviteUserToListDTO } from '../invitation/dtos/invite-user.dto';
 import { ListDTO } from './dtos/new-list.dto';
 import { ListModule } from './list.module';
+import { ListDocument } from './list.schema';
 
 @Injectable()
 export class ListService {
@@ -18,5 +20,9 @@ export class ListService {
         });
 
         return createdList.save();
-      }     
+      }
+
+      async find(id: string): Promise<ListDocument> {
+        return (await this.listModel.findById(id)).populate('creator');
+      }
 }

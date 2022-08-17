@@ -10,7 +10,7 @@ export type NoteDocument = Note & Document;
 export class Note {
   @Prop({ required: true })
   content: string;
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: List.name })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'List' })
   listId : List;
 }
 

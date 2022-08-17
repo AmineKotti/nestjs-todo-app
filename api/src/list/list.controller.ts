@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
+import { InviteUserToListDTO } from '../invitation/dtos/invite-user.dto';
 import { ListDTO } from './dtos/new-list.dto';
 import { ListDocument } from './list.schema';
 import { ListService } from './list.service';

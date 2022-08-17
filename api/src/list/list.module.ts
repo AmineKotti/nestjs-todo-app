@@ -7,6 +7,7 @@ import { ListService } from './list.service';
 @Module({
   imports: [MongooseModule.forFeature([{ name: 'List', schema: ListSchema }])],
   controllers: [ListController],
-  providers: [ListService]
+  providers: [ListService],
+  exports: [ListService],
 })
 export class ListModule {}
