@@ -14,9 +14,6 @@ export class List {
   description: string;
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
   creator : User;
-
-  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }], })
-  invitedusers : User;
 }
 
 export const  ListSchema = SchemaFactory.createForClass(List);
