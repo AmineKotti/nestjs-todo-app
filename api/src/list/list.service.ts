@@ -24,6 +24,6 @@ export class ListService {
       }
 
       async find(id: string): Promise<ListDocument> {
-        return (await this.listModel.findById(id)).populate('creator');
+        return await this.listModel.findById(id).populate('creator');
       }
 }

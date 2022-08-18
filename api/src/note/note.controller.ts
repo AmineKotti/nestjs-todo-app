@@ -25,6 +25,7 @@ export class NoteController {
 
    async userListInfo(user: UserDocument,listId:string){
     const findList = await this.listService.find(listId);
+
     let isCreator = false;
     let permission = "";
     if(user._id.toString() === findList.creator['_id'].toString()){
@@ -88,9 +89,11 @@ export class NoteController {
     @Param('id') id: string,
     @Body() updateNoteDTO : UpdateNoteDTO,@GetUser() currentUser
   ): Promise<NoteDocument> {   
-    const list = await this.noteService.find(id);
+    const note = await this.noteService.find(id);
     const user = await this.userService.findByEmail(currentUser.email);
-    let userListInfo =await this.userListInfo(user, list._id.toString())
+
+    let userListInfo =await this.userListInfo(user, note.listId['_id'].toString())
+
     const ability = this.abilityFactory.defineAbility(user,userListInfo.isCreator,userListInfo.permission);
     const isAllowed = ability.can(Action.Update, Note);
     if(!isAllowed)
@@ -108,9 +111,9 @@ export class NoteController {
   })
   @Delete(':id')
   async deleteNote(@Param('id') id: string,@GetUser() currentUser) {
-    const list = await this.noteService.find(id);
+    const note = await this.noteService.find(id);
     const user = await this.userService.findByEmail(currentUser.email);
-    let userListInfo =await this.userListInfo(user, list._id.toString())
+    let userListInfo =await this.userListInfo(user, note.listId['_id'].toString())
     const ability = this.abilityFactory.defineAbility(user,userListInfo.isCreator,userListInfo.permission);
     const isAllowed = ability.can(Action.Update, Note);
     if(!isAllowed)
