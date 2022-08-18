@@ -15,7 +15,6 @@ export class Invitation {
   listId : List;
   @Prop({type: String, enum: ['read', 'readwrite']})
   permission: String;
-
 }
 
 export const  InvitationSchema = SchemaFactory.createForClass(Invitation);

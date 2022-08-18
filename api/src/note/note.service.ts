@@ -20,12 +20,12 @@ export class NoteService {
         return createdNote.save();
       }
       
-      async findAll(): Promise<NoteDocument[]> {
-        return this.noteModel.find().exec();
+      async findAllByListId(listId: string): Promise<NoteDocument[]> {
+        return this.noteModel.find({listId:listId}).populate('listId');
       }
 
       async find(id: string): Promise<NoteDocument> {
-        return (await this.noteModel.findById(id)).populate('listId');
+        return await this.noteModel.findById(id).populate('listId');
       }
 
 
@@ -33,9 +33,9 @@ export class NoteService {
         id: string,
         noteData: UpdateNoteDTO,
       ): Promise<NoteDocument> {
+       
         let existingNote = await this.find(id);
-    
-        existingNote.content = noteData.content ?? existingNote.content;
+        existingNote.content = noteData.content;
         
         return existingNote.save();
       }
