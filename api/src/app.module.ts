@@ -8,6 +8,7 @@ import { ConfigModule } from '@nestjs/config';
 import { ListModule } from './list/list.module';
 import { NoteModule } from './note/note.module';
 import { InvitationModule } from './invitation/invitation.module';
+import { AbilityModule } from './ability/ability.module';
 
 
 @Module({
@@ -16,7 +17,7 @@ import { InvitationModule } from './invitation/invitation.module';
       isGlobal: true,
     }),
   MongooseModule.forRoot('mongodb://localhost:27017/todo'), 
-  AuthModule, UserModule, ListModule, NoteModule, InvitationModule],
+  AuthModule, UserModule, ListModule, NoteModule, InvitationModule, AbilityModule],
   controllers: [AppController],
   providers: [AppService],
 })
