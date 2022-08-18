@@ -14,9 +14,10 @@ export class ListService {
         @InjectModel('List') private readonly listModel: Model<ListModule>,
       ) {}
 
-      create(listData: ListDTO):Promise<any | null> {        
+      create(listData: ListDTO,creator:string):Promise<any | null> {        
         const createdList = new this.listModel({
-          ...listData
+          ...listData,
+          creator
         });
 
         return createdList.save();

@@ -9,6 +9,6 @@ import { InvitationService } from './invitation.service';
   imports: [ListModule,MongooseModule.forFeature([{ name: 'Invitation', schema: InvitationSchema }])],
   controllers: [InvitationController],
   providers: [InvitationService],
-  
+  exports: [InvitationService],
 })
 export class InvitationModule {}

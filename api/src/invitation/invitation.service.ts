@@ -5,6 +5,7 @@ import { Model } from 'mongoose';
 import { ListService } from 'src/list/list.service';
 import { InviteUserToListDTO } from './dtos/invite-user.dto';
 import { InvitationModule } from './invitation.module';
+import { InvitationDocument } from './invitation.schema';
 
 @Injectable()
 export class InvitationService {
@@ -20,8 +21,8 @@ export class InvitationService {
         if(existingList.creator['_id'].toString() === invitaionData.userId)
           throw new HttpException('creator of the list can not be invited!',HttpStatus.CONFLICT)
         
-
-         const list = await this.invitationModel.find({listId : invitaionData.listId}).find({userId: invitaionData.userId});
+         const list = await this.findInvitaion(invitaionData.listId,invitaionData.userId);
+         
          if(list.length !== 0)
           throw new HttpException('user is already invited to this list!',HttpStatus.CONFLICT)
          
@@ -31,6 +32,11 @@ export class InvitationService {
         });
 
         return createdInvitation.save();
+    }
+
+    async findInvitaion(listId:string,userId:string){
+      const invitaion = await this.invitationModel.find({listId : listId}).find({userId: userId}).exec();      
+      return invitaion;
     }
 
 

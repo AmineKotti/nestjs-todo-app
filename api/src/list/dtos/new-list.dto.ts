@@ -5,6 +5,5 @@ export class ListDTO {
     name: string;
     @ApiProperty({type:String, description: 'description'})
     description: string;
-    @ApiProperty({type:String, description: 'creator'})
-    creator:string;
+  
   }
