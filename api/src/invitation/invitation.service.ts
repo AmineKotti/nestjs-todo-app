@@ -21,7 +21,13 @@ export class InvitationService {
     
 
     async inviteUserToList(invitaionData: InviteUserToListDTO):Promise<any | null> {
+        const existingUser = await this.userService.findById(invitaionData.userId);
+        if(existingUser === null){
+          throw new HttpException('user not exist!',HttpStatus.CONFLICT)
+        }
         const existingList = await this.listService.find(invitaionData.listId);
+        if(existingList === null)
+          throw new HttpException('list not exist!',HttpStatus.CONFLICT)
         if(existingList.creator['_id'].toString() === invitaionData.userId)
           throw new HttpException('creator of the list can not be invited!',HttpStatus.CONFLICT)
         
@@ -46,6 +52,8 @@ export class InvitationService {
 
     async updateCollaboratorPrivilege(collaboratorId:string,currentUser:UserDetails,updateCollaboratorDto:UpdateCollaboratorPrivilegeDto){
       const existingList = await this.listService.find(updateCollaboratorDto.listId);
+      if(existingList === null)
+        throw new HttpException('list not exist!',HttpStatus.CONFLICT)
       const user = await this.userService.findByEmail(currentUser.email);
       if(existingList.creator['_id'].toString() !== user._id.toString())
       throw new HttpException('only creator of list can updated collaborators Privilege!',HttpStatus.CONFLICT)
@@ -61,7 +69,8 @@ export class InvitationService {
     async deleteCollaborator(collaboratorId:string,listId:string,currentUser:UserDetails){            
       const existingList = await this.listService.find(listId);
       if(existingList === null)
-        throw new BadRequestException('list not exist')
+        throw new HttpException('list not exist!',HttpStatus.CONFLICT)
+
       const user = await this.userService.findByEmail(currentUser.email);
       if(existingList.creator['_id'].toString() !== user._id.toString())
       throw new HttpException('only creator of list can updated collaborators Pvilege!',HttpStatus.CONFLICT)

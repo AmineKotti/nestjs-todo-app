@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Get, UseGuards, Patch, Param, Delete, Request, Req, ForbiddenException } from '@nestjs/common';
+import { Body, Controller, Post, Get, UseGuards, Patch, Param, Delete, Request, Req, ForbiddenException, HttpException, HttpStatus } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiParam, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { AbilityFactory, Action } from 'src/ability/ability.factory';
 import { GetUser } from 'src/auth/GetUser';
@@ -25,6 +25,8 @@ export class NoteController {
 
    async userListInfo(user: UserDocument,listId:string){
     const findList = await this.listService.find(listId);
+    if(findList === null)
+        throw new HttpException('list not exist!',HttpStatus.CONFLICT)
 
     let isCreator = false;
     let permission = "";
@@ -64,7 +66,7 @@ export class NoteController {
     name: 'listId'
   })
   @Get(':listId')
-  async findAllNotes(@Param('listId') listId: string,@GetUser() currentUser
+  async findAllNotes(@Param('listId') listId:string,@GetUser() currentUser
   ): Promise<NoteDocument[]> {   
     const user = await this.userService.findByEmail(currentUser.email);
     let userListInfo =await this.userListInfo(user, listId)
@@ -90,6 +92,8 @@ export class NoteController {
     @Body() updateNoteDTO : UpdateNoteDTO,@GetUser() currentUser
   ): Promise<NoteDocument> {   
     const note = await this.noteService.find(id);
+    if(note === null)
+       throw new ForbiddenException('note not exist!!');
     const user = await this.userService.findByEmail(currentUser.email);
 
     let userListInfo =await this.userListInfo(user, note.listId['_id'].toString())
@@ -112,6 +116,8 @@ export class NoteController {
   @Delete(':id')
   async deleteNote(@Param('id') id: string,@GetUser() currentUser) {
     const note = await this.noteService.find(id);
+    if(note === null)
+        throw new ForbiddenException('note not exist!!');
     const user = await this.userService.findByEmail(currentUser.email);
     let userListInfo =await this.userListInfo(user, note.listId['_id'].toString())
     const ability = this.abilityFactory.defineAbility(user,userListInfo.isCreator,userListInfo.permission);
